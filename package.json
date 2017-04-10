@@ -1,0 +1,30 @@
+{
+  "name": "rpi-web",
+  "version": "1.0.0",
+  "description": "raspberry test project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhongzhi107/rpi-web.git"
+  },
+  "keywords": [
+    "raspberry",
+    "koa2",
+    "node",
+    "web"
+  ],
+  "author": "zhongzhi <zhong.zhi@163.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhongzhi107/rpi-web/issues"
+  },
+  "homepage": "https://github.com/zhongzhi107/rpi-web#readme",
+  "dependencies": {
+    "debug": "^2.6.3",
+    "koa": "^2.2.0"
+  }
+}
