@@ -1,29 +1,39 @@
-const child_process = require('child_process');
 const debug = require('debug')('rpi-web');
-const Koa = require('koa');
-const app = new Koa();
+const app = require('./app');
+const http = require('http');
 const port = 3000;
 
-app.use(async (ctx, next) => {
-  const start = new Date();
-  await next();
-  const ms = new Date() - start;
-  debug(`${ctx.method} ${ctx.url} - ${ms}ms`);
+const server = http.createServer(app.callback());
+
+const io = require('socket.io')(server);
+
+console.log("socketio starting " + new Date().toLocaleString());
+
+io.on('connection', (socket) => {
+  console.log('-- connected --');
+  // node server time
+  socket.emit('heartbeat', new Date().getTime());
+  setTimeout(() => {
+    socket.emit('heartbeat', '5555....');
+  }, 5000);
+  socket.on('event', (data) => {
+    console.log('event: ', data);
+  });
+  socket.on('disconnect', () => {
+    //io.sockets.emit("broadcastState");
+    //turn off timestamp every second
+    //if somebody is connected their client will
+    //reconnect and the timestamps will continue
+    console.log('disconnect');
+  });
 });
 
-// response
-app.use(ctx => {
-  debug(ctx.query);
-  const { cmd } = ctx.query;
-  const a = child_process.execSync(`python ./scripts/${cmd}`);
-  console.log(a.toString());
-  ctx.body = 'Hello Koa';
-});
+// app.io = io;
 
-app.listen(port, (err) => {
+server.listen(port, (err) => {
   if (err) {
-      console.error(err);
-    } else {
-      console.log('==> 🚧  Web server listening on port %s', port);
-    }
+    console.error(err);
+  } else {
+    console.log('==> 🚧  Web server listening on port %s', port);
+  }
 });
